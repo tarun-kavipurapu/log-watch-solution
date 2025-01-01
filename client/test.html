@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log Viewer</title>
+    <style></style>
+  </head>
+  <body>
+    <div id="logContainer">
+      <pre id="logDisplay"></pre>
+    </div>
+
+    <script type="text/javascript">
+      // WebSocket connection
+
+      const socket = new WebSocket("ws://localhost:8080/log"); // Adjust URL to match your server's WebSocket endpoint
+
+      // Elements
+      const logDisplay = document.getElementById("logDisplay");
+
+      socket.onopen = () => {
+        console.log("Socket is open");
+      };
+
+      socket.onmessage = (event) => {
+        const element = document.createElement("div");
+        element.textContent = event.data;
+        logDisplay.appendChild(element);
+      };
+
+      socket.onclose = (event) => {
+        const element = document.createElement("div");
+        element.textContent = "Connecttion closed";
+
+        logDisplay.appendChild(element);
+      };
+      // Handle errors
+      socket.onerror = function (error) {
+        console.log("WebSocket Error: " + error);
+        let errorLog = document.createElement("div");
+        errorLog.textContent = "Error: " + error.message;
+        logDisplay.appendChild(errorLog);
+      };
+    </script>
+  </body>
+</html>
